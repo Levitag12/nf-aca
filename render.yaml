@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: taskmaster-app
+    env: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+
+databases:
+  - name: taskmaster-db
+    databaseName: taskmaster
+    user: taskmaster_user
+    plan: free
+
