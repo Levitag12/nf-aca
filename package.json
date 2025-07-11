@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
-  "scripts": {
-    "build": "./build.sh",
-    "start": "node server/dist/index.js",
-    "dev": "tsx server/index.ts",
-    "db:generate": "cd server && npm run db:generate"
+    "scripts": {
+      "build": "./build.sh",
+      "start": "node server/dist/index.js",
+      "dev": "tsx server/index.ts",
+      "db:generate": "cd server && npm run db:generate"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
