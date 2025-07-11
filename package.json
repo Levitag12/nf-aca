@@ -4,8 +4,9 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "build": "cd client && npm install && npm run build && cd ../server && npx tsc",
-    "start": "node dist/server/index.js",
+    "build": "./build.sh",                  // Usa o build.sh que já trata tudo
+    "start": "node server/dist/index.js",   // Executa o backend compilado
+    "dev": "tsx server/index.ts",           // Para rodar local em dev
     "db:generate": "cd server && npm run db:generate"
   },
   "dependencies": {

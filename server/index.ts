@@ -15,16 +15,16 @@ const PORT = process.env.PORT || 3000;
 
 // --- Middleware ---
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  credentials: true,
 }));
 app.use(express.json());
 
-// --- Rotas ---
+// --- Rotas de API ---
 app.use("/api", authRoutes);
 app.use("/", routes);
 
-// --- Rota para seed do banco de dados ---
+// --- Rota de seed ---
 app.get("/api/seed-database", async (req, res) => {
   if (req.query.secret !== "G147G147G147") {
     return res.status(401).json({ message: "Não autorizado." });
@@ -47,17 +47,17 @@ app.get("/api/seed-database", async (req, res) => {
       email: "admin@example.com",
       name: "Administrador",
       hashedPassword,
-      role: "ADMIN"
+      role: "ADMIN",
     });
 
     res.send("Usuário admin criado com sucesso.");
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao criar usuário seed:", error);
     res.status(500).send("Erro ao criar usuário.");
   }
 });
 
-// --- Servir frontend Vite ---
+// --- Servir frontend Vite build ---
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const clientBuildPath = path.resolve(__dirname, "../client/dist");
@@ -68,7 +68,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(clientBuildPath, "index.html"));
 });
 
-// --- Iniciar servidor ---
+// --- Start server ---
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`✅ Servidor rodando na porta ${PORT}`);
 });

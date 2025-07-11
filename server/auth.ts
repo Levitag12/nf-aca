@@ -10,7 +10,7 @@ authRoutes.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ message: "Nome de utilizador e senha são obrigatórios." });
+    return res.status(400).json({ message: "Usuário e senha são obrigatórios." });
   }
 
   try {
@@ -19,22 +19,28 @@ authRoutes.post("/login", async (req, res) => {
     });
 
     if (!foundUser) {
-      return res.status(401).json({ message: "Utilizador ou senha inválidos" });
+      return res.status(401).json({ message: "Usuário ou senha inválidos." });
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, foundUser.hashedPassword);
 
     if (!isPasswordCorrect) {
-      return res.status(401).json({ message: "Utilizador ou senha inválidos" });
+      return res.status(401).json({ message: "Usuário ou senha inválidos." });
     }
 
     return res.status(200).json({
       message: "Login bem-sucedido!",
-      role: foundUser.role,
+      user: {
+        id: foundUser.id,
+        name: foundUser.name,
+        username: foundUser.username,
+        email: foundUser.email,
+        role: foundUser.role,
+      }
     });
 
   } catch (error) {
-    console.error("Erro no processo de login:", error);
+    console.error("Erro no login:", error);
     return res.status(500).json({ message: "Erro interno do servidor." });
   }
 });
