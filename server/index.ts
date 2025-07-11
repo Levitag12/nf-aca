@@ -1,74 +1,37 @@
-import express from "express";
-import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
-import bcrypt from "bcrypt";
-import { eq } from "drizzle-orm";
-
-import { db } from "./db.js";
-import authRoutes from "./auth.js";
-import routes from "./routes.js";
-import { users } from "../shared/schema.js";
+import express from 'express';
+import session from 'express-session';
+import cors from 'cors';
+import path from 'path';
+import authRoutes from './routes/auth';
+import protectedRoutes from './routes/routes';
+import { drizzle } from 'drizzle-orm/neon-serverless';
+import { Pool } from '@neondatabase/serverless';
+import * as schema from './drizzle/schema';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-// --- Middleware ---
-app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
-  credentials: true,
-}));
+// Drizzle + Neon
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+export const db = drizzle(pool, { schema });
+
+// Middlewares
+app.use(cors());
 app.use(express.json());
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'secret',
+  resave: false,
+  saveUninitialized: false,
+}));
 
-// --- Rotas de API ---
-app.use("/api", authRoutes);
-app.use("/", routes);
+// Rotas
+app.use('/api/auth', authRoutes);
+app.use('/api', protectedRoutes);
 
-// --- Rota de seed ---
-app.get("/api/seed-database", async (req, res) => {
-  if (req.query.secret !== "G147G147G147") {
-    return res.status(401).json({ message: "Não autorizado." });
-  }
+// Serve o frontend
+const distPath = path.join(__dirname, '../../client/dist');
+app.use(express.static(distPath));
+app.get('*', (_, res) => res.sendFile(path.join(distPath, 'index.html')));
 
-  try {
-    const existing = await db.query.users.findFirst({
-      where: eq(users.username, "admin"),
-    });
-
-    if (existing) {
-      return res.send("Usuário admin já existe.");
-    }
-
-    const hashedPassword = await bcrypt.hash("senha123", 10);
-
-    await db.insert(users).values({
-      id: "admin-001",
-      username: "admin",
-      email: "admin@example.com",
-      name: "Administrador",
-      hashedPassword,
-      role: "ADMIN",
-    });
-
-    res.send("Usuário admin criado com sucesso.");
-  } catch (error) {
-    console.error("Erro ao criar usuário seed:", error);
-    res.status(500).send("Erro ao criar usuário.");
-  }
-});
-
-// --- Servir frontend Vite build ---
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const clientBuildPath = path.resolve(__dirname, "../client/dist");
-
-app.use(express.static(clientBuildPath));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(clientBuildPath, "index.html"));
-});
-
-// --- Start server ---
-app.listen(PORT, () => {
-  console.log(`✅ Servidor rodando na porta ${PORT}`);
-});
+// Inicia o servidor
+app.listen(port, () => console.log(`Server running on port ${port}`));

@@ -1,48 +1,25 @@
-import { Router } from "express";
-import { db } from "./db.js";
-import { users } from "../shared/schema.js";
-import { eq } from "drizzle-orm";
-import bcrypt from "bcrypt";
+import { Router } from 'express';
+import bcrypt from 'bcryptjs';
+import { db } from '../index';
+import { users } from '../drizzle/schema';
+import { eq } from 'drizzle-orm';
 
-const authRoutes = Router();
+const router = Router();
 
-authRoutes.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await db.select().from(users).where(eq(users.email, email)).then(res => res[0]);
+  if (!user) return res.status(401).json({ error: 'Usuário não encontrado' });
 
-  if (!username || !password) {
-    return res.status(400).json({ message: "Usuário e senha são obrigatórios." });
-  }
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) return res.status(401).json({ error: 'Senha inválida' });
 
-  try {
-    const foundUser = await db.query.users.findFirst({
-      where: eq(users.username, username),
-    });
-
-    if (!foundUser) {
-      return res.status(401).json({ message: "Usuário ou senha inválidos." });
-    }
-
-    const isPasswordCorrect = await bcrypt.compare(password, foundUser.hashedPassword);
-
-    if (!isPasswordCorrect) {
-      return res.status(401).json({ message: "Usuário ou senha inválidos." });
-    }
-
-    return res.status(200).json({
-      message: "Login bem-sucedido!",
-      user: {
-        id: foundUser.id,
-        name: foundUser.name,
-        username: foundUser.username,
-        email: foundUser.email,
-        role: foundUser.role,
-      }
-    });
-
-  } catch (error) {
-    console.error("Erro no login:", error);
-    return res.status(500).json({ message: "Erro interno do servidor." });
-  }
+  (req.session as any).user = { id: user.id, email: user.email };
+  res.json({ message: 'Logado com sucesso' });
 });
 
-export default authRoutes;
+router.post('/logout', (req, res) => {
+  req.session?.destroy(() => res.json({ message: 'Logout feito' }));
+});
+
+export default router;

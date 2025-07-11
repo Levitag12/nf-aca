@@ -1,13 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-const routes = Router();
+const router = Router();
 
-// Rota de status da API
-routes.get("/", (req, res) => {
-  res.json({ message: "✅ API funcionando corretamente." });
+router.get('/protected', (req, res) => {
+  if (!(req.session as any).user) return res.status(401).json({ error: 'Não autenticado' });
+  res.json({ message: 'Rota protegida acessada com sucesso!' });
 });
 
-// Ponto para adicionar futuras rotas protegidas ou públicas
-// routes.get("/exemplo", (req, res) => { ... });
-
-export default routes;
+export default router;
