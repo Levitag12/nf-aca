@@ -15,13 +15,27 @@ const port = process.env.PORT || 3000;
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 export const db = drizzle(pool, { schema });
 
+// Habilita proxy (necessário para Render reconhecer HTTPS e setar cookies corretamente)
+app.set('trust proxy', 1);
+
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: true,             // Permite qualquer origem (ou defina explicitamente)
+  credentials: true         // Permite envio de cookies
+}));
+
 app.use(express.json());
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret',
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',  // true apenas em produção
+    sameSite: 'none',                                // necessário para cookies cross-origin
+    maxAge: 1000 * 60 * 60 * 24                      // 1 dia
+  }
 }));
 
 // Rotas
