@@ -1,13 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# exit on error
+set -o errexit
 
-# Build do frontend
-cd client
+# Instala todas as dependências a partir da raiz
 npm install
+
+# Constrói o backend e o frontend com um único comando
 npm run build
-
-# Volta pro root/backend
-cd ../server
-npm install
-
-# Inicia o backend
-npx tsx index.ts
