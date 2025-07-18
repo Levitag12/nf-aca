@@ -18,14 +18,14 @@
     "drizzle-orm": "^0.32.0",
     "drizzle-zod": "^0.5.1",
     "express": "^4.19.2",
-    "express-session": "^1.18.0",
+    "express-session": "^1.18.2",
     "pg": "^8.12.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
-    "@types/express-session": "^1.18.0",
+    "@types/express-session": "^1.18.2",
     "@types/node": "^20.14.9",
     "@types/pg": "^8.11.6",
     "@types/react": "^18.3.3",
