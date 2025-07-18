@@ -8,7 +8,7 @@
     "dev": "tsx watch server/src/index.ts",
     "build:server": "tsc -p server/tsconfig.json",
     "build:client": "vite build",
-    "build": "npx rimraf dist && npm run build:server && npm run build:client",
+    "build": "./node_modules/.bin/rimraf dist && npm run build:server && npm run build:client",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"
   },
