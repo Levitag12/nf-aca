@@ -1,12 +1,11 @@
 import { Router, Request, Response } from 'express';
-import { db } from './index'; // Caminho corrigido
+import { db } from './index'; // Caminho correto para o db
 
 const router = Router();
 
-// Exemplo de uma rota protegida
+// Exemplo de uma rota protegida que verifica a sessão do usuário
 router.get('/profile', (req: Request, res: Response) => {
-  // Esta é uma rota de exemplo. Adapte conforme sua necessidade.
-  // A lógica para verificar se o usuário está logado (middleware) deve ser adicionada aqui.
+  // A lógica de middleware para verificar a sessão deve ser aplicada a esta rota no server/index.ts
   if ((req.session as any).user) {
     res.json({ user: (req.session as any).user });
   } else {

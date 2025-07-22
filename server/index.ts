@@ -1,12 +1,12 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import path from 'path';
-import authRoutes from './auth'; // Caminho corrigido
-import protectedRoutes from './routes'; // Caminho corrigido
+import authRoutes from './auth';
+import protectedRoutes from './routes';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import * as schema from '../shared/drizzle/schema';
+import * as schema from '@shared/drizzle/schema'; // <-- Caminho corrigido com alias
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -38,15 +38,13 @@ app.use(session({
   }
 }));
 
-// Monta as rotas da API com os caminhos corretos
 app.use('/api/auth', authRoutes);
 app.use('/api', protectedRoutes);
 
-// O caminho para a pasta 'public' do frontend
 const publicPath = path.join(__dirname, '..', 'public');
 app.use(express.static(publicPath));
 
-app.get('*', (req, res) => {
+app.get('*', (req: Request, res: Response) => {
   if (!req.originalUrl.startsWith('/api')) {
     res.sendFile(path.join(publicPath, 'index.html'));
   } else {

@@ -1,12 +1,12 @@
 import { db } from './index';
-import { users } from '../shared/drizzle/schema';
+import { users } from '@shared/drizzle/schema'; // <-- Caminho corrigido com alias
 import bcrypt from 'bcryptjs';
+import { eq } from 'drizzle-orm'; // <-- Importação que faltava
 
 async function seed() {
   try {
     console.log('Iniciando o seeding do banco de dados...');
 
-    // Verifica se o usuário admin já existe
     const existingUser = await db.select().from(users).where(eq(users.email, 'admin@admin.com'));
     if (existingUser.length > 0) {
       console.log('Usuário admin já existe. Seeding não é necessário.');
@@ -22,11 +22,11 @@ async function seed() {
 
   } catch (error) {
     console.error('Erro durante o seeding:', error);
-    process.exit(1); // Encerra o processo com erro
+    process.exit(1);
   }
 }
 
 seed().then(() => {
   console.log('Seeding finalizado.');
-  process.exit(0); // Encerra o processo com sucesso
+  process.exit(0);
 });
