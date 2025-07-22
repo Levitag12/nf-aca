@@ -4,9 +4,9 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "start": "node dist/server/index.js",
+    "start": "node dist/server/src/index.js",
     "dev": "tsx watch server/src/index.ts",
-    "build:server": "tsc -p server/tsconfig.json",
+    "build:server": "tsc",
     "build:client": "vite build",
     "build": "rm -rf dist && npm run build:server && npm run build:client",
     "db:generate": "drizzle-kit generate",

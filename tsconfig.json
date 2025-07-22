@@ -1,13 +1,25 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "CommonJS",                      // <-- CORRIGIDO: Necessário para Node.js
+    "moduleResolution": "node",
+    "rootDir": ".",                             // <-- ADICIONADO: Essencial para corrigir o erro
+    "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist"
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["server", "shared"]
+  "include": [
+    "server/**/*.ts",
+    "shared/**/*.ts"
+  ],
+  "exclude": [                                  // <-- ADICIONADO: Boas práticas
+    "node_modules",
+    "client",
+    "dist"
+  ]
 }
