@@ -4,11 +4,8 @@
     "lib": ["ES2022"],
     "module": "CommonJS",
     "moduleResolution": "node",
-    "rootDir": ".",
+    "rootDir": "src",
     "outDir": "dist",
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -17,12 +14,10 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "server/**/*.ts",
-    "shared/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
-    "client",
     "dist"
   ]
 }
