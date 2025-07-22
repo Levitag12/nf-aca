@@ -4,7 +4,6 @@
     "lib": ["ES2022"],
     "module": "CommonJS",
     "moduleResolution": "node",
-    "rootDir": "src",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
@@ -14,10 +13,12 @@
     "allowSyntheticDefaultImports": true
   },
   "include": [
-    "src/**/*.ts"
+    "server",
+    "shared"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "client"
   ]
 }
