@@ -2,10 +2,13 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022"],
-    "module": "CommonJS",                      // <-- CORRIGIDO: Necessário para Node.js
+    "module": "CommonJS",
     "moduleResolution": "node",
-    "rootDir": ".",                             // <-- ADICIONADO: Essencial para corrigir o erro
+    "rootDir": ".",
     "outDir": "dist",
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -17,7 +20,7 @@
     "server/**/*.ts",
     "shared/**/*.ts"
   ],
-  "exclude": [                                  // <-- ADICIONADO: Boas práticas
+  "exclude": [
     "node_modules",
     "client",
     "dist"
